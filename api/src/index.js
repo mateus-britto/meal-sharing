@@ -12,57 +12,75 @@ app.use(bodyParser.json());
 const apiRouter = express.Router();
 
 // Homework begins bellow
-apiRouter.get("/meals", async (req, res) => {
-  const mealQuery = "SELECT * FROM meal";
-  const [meal] = await knex.raw(mealQuery); // Destructuring the result to extract the meal data
-  res.json(meal);
-});
-
-apiRouter.get("/reservations", async (req, res) => {
-  const reservationQuery = "SELECT * FROM reservation";
-  const [reservation] = await knex.raw(reservationQuery);
-  res.json(reservation);
-});
-
-apiRouter.get("/reviews", async (req, res) => {
-  const reviewQuery = "SELECT * FROM review";
-  const [review] = await knex.raw(reviewQuery);
-  res.json(review);
-});
 
 // Respond with all meals in the future (relative to the when datetime)
 apiRouter.get("/future-meals", async (req, res) => {
-  const futureMealsQuery = "SELECT * FROM meal WHERE `when` > NOW()";
-  const [futureMeals] = await knex.raw(futureMealsQuery);
-  res.json(futureMeals);
+  try {
+    const futureMealsQuery = "SELECT * FROM meal WHERE `when` > NOW()";
+    const [futureMeals] = await knex.raw(futureMealsQuery);
+    if (!futureMeals || futureMeals.length === 0) {
+      return res.status(404).json({ message: "No meals found" });
+    }
+    res.json(futureMeals);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
 // Respond with all meals in the past (relative to the when datetime)
 apiRouter.get("/past-meals", async (req, res) => {
-  const pastMealsQuery = "SELECT * FROM meal where `when` < NOW()";
-  const [pastMeals] = await knex.raw(pastMealsQuery);
-  res.json(pastMeals);
+  try {
+    const pastMealsQuery = "SELECT * FROM meal where `when` < NOW()";
+    const [pastMeals] = await knex.raw(pastMealsQuery);
+    if (!pastMeals || pastMeals.length === 0) {
+      return res.status(404).json({ message: "No meals found" });
+    }
+    res.json(pastMeals);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
 // Respond with all meals sorted by ID
 apiRouter.get("/all-meals", async (req, res) => {
-  const allMealsQuery = "SELECT * FROM meal ORDER BY id";
-  const [allMeals] = await knex.raw(allMealsQuery);
-  res.json(allMeals);
+  try {
+    const allMealsQuery = "SELECT * FROM meal ORDER BY id";
+    const [allMeals] = await knex.raw(allMealsQuery);
+    if (!allMeals || allMeals.length === 0) {
+      return res.status(404).json({ message: "No meals found" });
+    }
+    res.json(allMeals);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
 // Respond with the first meal (meaning with the minimum id)
 apiRouter.get("/first-meal", async (req, res) => {
-  const firstMealQuery = "SELECT title FROM meal ORDER BY id ASC LiMIT 1";
-  const [firstMeal] = await knex.raw(firstMealQuery);
-  res.json(firstMeal);
+  try {
+    const firstMealQuery = "SELECT title FROM meal ORDER BY id ASC LIMIT 1";
+    const [firstMeal] = await knex.raw(firstMealQuery);
+    if (!firstMeal || firstMeal.length === 0) {
+      return res.status(404).json({ message: "No meals found" });
+    }
+    res.json(firstMeal);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
 // Respond with the last meal (meaning with the maximum id)
 apiRouter.get("/last-meal", async (req, res) => {
-  const lastMealQuery = "SELECT title FROM meal ORDER BY id DESC LiMIT 1";
-  const [lastMeal] = await knex.raw(lastMealQuery);
-  res.json(lastMeal);
+  try {
+    const lastMealQuery = "SELECT title FROM meal ORDER BY id DESC LIMIT 1";
+    const [lastMeal] = await knex.raw(lastMealQuery);
+    if (!lastMeal || lastMeal.length === 0) {
+      return res.status(404).json({ message: "No meals found" });
+    }
+    res.json(lastMeal);
+  } catch (error) {
+    res.status(500).json({ error: "Database error", details: error.message });
+  }
 });
 
 // This nested router example can also be replaced with your own sub-router

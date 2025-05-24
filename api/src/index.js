@@ -4,14 +4,14 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import knex from "./database_client.js";
 import nestedRouter from "./routers/nested.js";
+import mealsRouter from "./routers/meals.js";
+import reservationsRouter from "./routers/reservations.js";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
 const apiRouter = express.Router();
-
-// Homework begins bellow
 
 // Respond with all meals in the future (relative to the when datetime)
 apiRouter.get("/future-meals", async (req, res) => {
@@ -82,6 +82,10 @@ apiRouter.get("/last-meal", async (req, res) => {
     res.status(500).json({ error: "Database error", details: error.message });
   }
 });
+
+// Use imported routers
+apiRouter.use(mealsRouter);
+apiRouter.use(reservationsRouter);
 
 // This nested router example can also be replaced with your own sub-router
 apiRouter.use("/nested", nestedRouter);

@@ -19,16 +19,39 @@ mealsRouter.get("/meals", async (req, res) => {
 });
 
 // Adds a new meal to the database
+// Change this route to accept data from the client
 mealsRouter.post("/meals", async (req, res) => {
+  const { title, description, location, when, max_reservations, price, created_date } = req.body;
+
+  // Data validation
+  if (
+    !title ||
+    typeof title !== "string" ||
+    !description ||
+    typeof description !== "string" ||
+    !location ||
+    typeof location !== "string" ||
+    !when ||
+    isNaN(Date.parse(when)) ||
+    !Number.isInteger(max_reservations) ||
+    max_reservations <= 0 ||
+    typeof price !== "number" ||
+    price <= 0 ||
+    !created_date ||
+    isNaN(Date.parse(created_date))
+  ) {
+    return res.status(400).json({ message: "Missing or invalid required fields" });
+  }
+
   try {
     const newMeal = {
-      title: "Taco Fiesta",
-      description: "Authentic Mexican tacos with fresh toppings",
-      location: "Fiesta Grill",
-      when: "2023-11-05 18:30:00",
-      max_reservations: 25,
-      price: 12.5,
-      created_date: "2023-10-15",
+      title,
+      description,
+      location,
+      when,
+      max_reservations,
+      price,
+      created_date,
     };
 
     await knex("meal").insert(newMeal);
@@ -42,6 +65,13 @@ mealsRouter.post("/meals", async (req, res) => {
 // Returns the meal by id
 mealsRouter.get("/meals/:id", async (req, res) => {
   const { id } = req.params;
+
+  // Add ID validation
+  // Converts the string to a number, checks if it is a whole number and rejects zero or negative numbers
+  const parsedId = Number(id);
+  if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    return res.status(400).json({ message: "Invalid meal ID. Must be a positive integer." });
+  }
 
   try {
     const meal = await knex("meal").where({ id }).first();
@@ -60,6 +90,11 @@ mealsRouter.get("/meals/:id", async (req, res) => {
 mealsRouter.put("/meals/:id", async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
+
+  const parsedId = Number(id);
+  if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    return res.status(400).json({ message: "Invalid reservation ID. Must be a positive integer." });
+  }
 
   if (!title) {
     return res.status(400).send("Title is required.");
@@ -81,6 +116,11 @@ mealsRouter.put("/meals/:id", async (req, res) => {
 // Deletes the meal by id
 mealsRouter.delete("/meals/:id", async (req, res) => {
   const { id } = req.params;
+
+  const parsedId = Number(id);
+  if (!Number.isInteger(parsedId) || parsedId <= 0) {
+    return res.status(400).json({ message: "Invalid reservation ID. Must be a positive integer." });
+  }
 
   try {
     const rowsDeleted = await knex("meal").where({ id }).del();

@@ -5,14 +5,93 @@ const mealsRouter = express.Router();
 
 // Returns all meals
 mealsRouter.get("/meals", async (req, res) => {
-  try {
-    const allMeals = await knex("meal").select("*");
+  const { maxPrice, availableReservations, title, dateAfter, dateBefore, limit, sortKey, sortDir } =
+    req.query;
 
-    if (allMeals.length === 0) {
-      return res.status(404).json({ message: "No meals found" });
+  try {
+    const query = knex("meal")
+      .select("meal.*")
+      .leftJoin("reservation", "meal.id", "reservation.meal_id")
+      .groupBy("meal.id");
+
+    // Filter by maxPrice
+    if (maxPrice !== undefined) {
+      const parsedMaxPrice = Number(maxPrice);
+      if (isNaN(parsedMaxPrice)) {
+        return res.status(400).json({ message: "Invalid maxPrice. Must be a number." });
+      }
+      query.having("price", "<", parsedMaxPrice);
     }
 
-    res.json(allMeals);
+    // Filter by availability of spots
+    if (availableReservations !== undefined) {
+      const parsedAvailable = availableReservations === "true";
+
+      if (parsedAvailable) {
+        query.havingRaw("meal.max_reservations > IFNULL(SUM(reservation.number_of_guests), 0)");
+      } else {
+        query.havingRaw("meal.max_reservations <= IFNULL(SUM(reservation.number_of_guests), 0)");
+      }
+    }
+
+    // Filter by partial title (case-insensitive)
+    if (title !== undefined) {
+      query.whereRaw("LOWER(meal.title) LIKE ?", [`%${title.toLowerCase()}%`]);
+    }
+
+    // Filter by date after
+    if (dateAfter !== undefined) {
+      const parsedDate = new Date(dateAfter);
+      if (isNaN(parsedDate)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid date. Use a valid date format (e.g., 2025-05-30)." });
+      }
+      query.where("meal.when", ">", parsedDate);
+    }
+
+    // Filter by date before
+    if (dateBefore !== undefined) {
+      const parsedDate = new Date(dateBefore);
+      if (isNaN(parsedDate)) {
+        return res
+          .status(400)
+          .json({ message: "Invalid date. Use a valid date format (e.g., 2025-05-30)." });
+      }
+      query.where("meal.when", "<", parsedDate);
+    }
+
+    // Filter by number of meals
+    if (limit !== undefined) {
+      const parsedLimit = Number(limit);
+      if (!Number.isInteger(parsedLimit) || parsedLimit <= 0) {
+        return res.status(400).json({ message: "Invalid limit. Must be a positive integer." });
+      }
+      query.limit(parsedLimit);
+    }
+
+    // Allowed sorting keys
+    const allowedSortKeys = ["when", "max_reservations", "price"];
+    const allowedSortDirs = ["asc", "desc"];
+
+    if (sortDir && !sortKey) {
+      return res.status(400).json({
+        message: "`sortDir` requires a `sortKey` to be provided.",
+      });
+    }
+
+    // If sortKey is valid and provided
+    if (sortKey && allowedSortKeys.includes(sortKey)) {
+      // Use 'asc' as default direction unless sortDir is valid
+      const direction = allowedSortDirs.includes(sortDir?.toLowerCase()) // will convert the value of sortDir to lowercase if sortDir is defined and is a string
+        ? sortDir.toLowerCase()
+        : "asc";
+
+      query.orderBy(sortKey, direction);
+    }
+
+    const meals = await query;
+    res.json(meals);
   } catch (error) {
     res.status(500).json({ error: "Database error", details: error.message });
   }

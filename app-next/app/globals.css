@@ -5,9 +5,13 @@
 }
 
 body {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Horizontally center */
+  justify-content: start; /* Horizontally center */
   align-items: center;
-  background-color: burlywood;
+  background-image: url("../assets/restaurant-background.jpg"); /* Adjust the path based on your folder structure */
+  background-size: cover; /* Ensures the image covers the entire container */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat;
 }

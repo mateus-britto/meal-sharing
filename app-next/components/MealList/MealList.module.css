@@ -23,25 +23,21 @@
   margin: 0;
 }
 
-.mealListItem {
-  cursor: pointer;
-  font-size: 1.5rem;
-  padding: 10px 15px;
-  margin: 5px 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.mealListItem:hover {
-  background-color: #f7debe;
-  transform: scale(1.01);
-}
-
 .loadingText {
   font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
   padding: 10px;
   color: #333;
+}
+
+.mealList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns by default */
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .mealList {
+    grid-template-columns: 1fr; /* Switch to one column for smaller screens */
+  }
 }

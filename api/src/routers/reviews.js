@@ -42,6 +42,7 @@ reviewsRouter.get("/meals/:meal_id/reviews", async (req, res) => {
 
 // Adds a new review to the database.
 reviewsRouter.post("/reviews", async (req, res) => {
+  console.log("BODY RECEIVED:", req.body) // For debugging
   const { title, description, meal_id, stars, created_date } = req.body;
 
   // Added data validation (had to use AI to figure it out)

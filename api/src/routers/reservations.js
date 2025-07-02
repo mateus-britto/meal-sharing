@@ -20,6 +20,7 @@ reservationsRouter.get("/reservations", async (req, res) => {
 
 // Adds a new reservation to the database
 reservationsRouter.post("/reservations", async (req, res) => {
+  console.log("BODY RECEIVED:", req.body); // For debugging
   const {
     number_of_guests,
     meal_id,
@@ -67,22 +68,23 @@ reservationsRouter.post("/reservations", async (req, res) => {
 });
 
 // Returns a reservation by id
+// Added/updated GET /reservations/:id endpoint to return the total number of guests for a meal by querying reservations with meal_id = id, instead of by reservation id.
+// This ensures the frontend can fetch reservation counts per meal correctly.
+// Other endpoints (POST, PUT, DELETE) for reservations by reservation id remain
 reservationsRouter.get("/reservations/:id", async (req, res) => {
   const { id } = req.params;
-
-  const parsedId = Number(id);
-  if (!Number.isInteger(parsedId) || parsedId <= 0) {
-    return res.status(400).json({ message: "Invalid reservation ID. Must be a positive integer." });
+  const mealId = Number(id);
+  if (!Number.isInteger(mealId) || mealId <= 0) {
+    return res.status(400).json({ message: "Invalid meal ID. Must be a positive integer." });
   }
 
   try {
-    const reservation = await knex("reservation").where({ id }).first();
-
-    if (!reservation) {
-      return res.status(404).json({ message: "No reservation found" });
+    const reservations = await knex("reservation").where({ meal_id: mealId });
+    if (!reservations || reservations.length === 0) {
+      return res.status(404).json({ message: "No reservations found for this meal" });
     }
-
-    res.json(reservation);
+    const number_of_guests = reservations.reduce((sum, r) => sum + r.number_of_guests, 0);
+    res.json({ number_of_guests });
   } catch (error) {
     res.status(500).json({ error: "Database error", details: error.message });
   }

@@ -168,19 +168,34 @@ mealsRouter.get("/meals/:id", async (req, res) => {
 // Updates the meal by id
 mealsRouter.put("/meals/:id", async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
-
   const parsedId = Number(id);
   if (!Number.isInteger(parsedId) || parsedId <= 0) {
-    return res.status(400).json({ message: "Invalid reservation ID. Must be a positive integer." });
+    return res.status(400).json({ message: "Invalid meal ID. Must be a positive integer." });
   }
 
-  if (!title) {
-    return res.status(400).send("Title is required.");
+  // Build update object with only provided fields
+  const allowedFields = [
+    "title",
+    "description",
+    "location",
+    "when",
+    "max_reservations",
+    "price",
+    "created_date",
+  ];
+  const updateData = {};
+  for (const field of allowedFields) {
+    if (req.body[field] !== undefined) {
+      updateData[field] = req.body[field];
+    }
+  }
+
+  if (Object.keys(updateData).length === 0) {
+    return res.status(400).json({ message: "No valid fields provided for update." });
   }
 
   try {
-    const rowsUpdated = await knex("meal").where({ id }).update({ title });
+    const rowsUpdated = await knex("meal").where({ id: parsedId }).update(updateData);
 
     if (rowsUpdated === 0) {
       return res.status(404).json({ message: "No meal found" });

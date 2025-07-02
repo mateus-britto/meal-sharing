@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+.mealWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.mealCard {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  padding: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.makeReservation {
+  margin-bottom: 10px;
+}
+
+.mealTitle {
+  font-size: 1.5rem;
+}
+
+.mealDescription {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.mealPrice {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  padding: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form > label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.form > input {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  padding: 2px;
+}
+
+.form > button {
+  cursor: pointer;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.noReservationsMessage {
+  background-color: #f9f9f9;
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.reviewButton {
+  cursor: pointer;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.hidden {
+  margin-top: 20px;
+}
+
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: "Roboto", sans-serif;
+  padding: 16px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reviewForm > label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.reviewForm > input {
+  margin-bottom: 10px;
+  font-size: 1rem;
+  padding: 2px;
+}
+
+.reviewForm > textarea {
+  margin-bottom: 10px;
+  padding: 5px;
+  font-size: 1rem;
+}
+
+.reviewForm > button {
+  cursor: pointer;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  padding: 5px;
+}
+
+.backToMenuLink {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  text-decoration: none;
+  padding: 5px;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.backToMenuLink:hover {
+    text-decoration: underline;
+}
+.backToMenuLink:visited {
+    color: #333;
+}

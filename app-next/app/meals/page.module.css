@@ -26,6 +26,11 @@
   margin-bottom: 10px;
 }
 
+.seeMore {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+}
+
 .mealList {
   font-family: "Roboto", sans-serif;
   list-style: none;
@@ -66,8 +71,10 @@
   transform: scale(1.05);
 }
 
-.mealsLink {
+.mealLink {
+  display: block;
   text-decoration: none;
+  color: inherit;
 }
 
 .footer {

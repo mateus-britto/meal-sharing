@@ -1,7 +1,8 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import Meal from "../Meal/Meal";
-import styles from "./MealList.module.css";
+import Meal from "@/components/Meal/Meal";
+import styles from "./page.module.css";
 import Link from "next/link";
 
 export default function MealList() {
@@ -34,15 +35,15 @@ export default function MealList() {
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.mealWrapper}>
-        <h1 className={styles.mealsTitle}>Some of our Meals</h1>
+        <h1 className={styles.mealsTitle}>Delicious Meals Await You</h1>
+        <p className={styles.seeMore}>Click on a meal to see more</p>
         <div className={styles.mealList}>
-          {meals.slice(0, 4).map((meal) => (
-            <Meal key={meal.id} meal={meal} />
+          {meals.map((meal) => (
+            <Link className={styles.mealLink} key={meal.id} href={`http://localhost:3001/meals/${meal.id}`}>
+              <Meal meal={meal} />
+            </Link>
           ))}
         </div>
-      <Link className={styles.mealsLink} href="/meals">
-        <button className={styles.seeMoreBtn}>See more</button>
-      </Link>
       </div>
       <footer className={styles.footer}>
         © {new Date().getFullYear()} Meal Sharing. Made with ❤️ for food lovers.

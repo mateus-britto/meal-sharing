@@ -1,24 +1,42 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 .mealWrapper {
+  position: relative;
+
+  backdrop-filter: blur(1px) saturate(100%);
+  -webkit-backdrop-filter: blur(1px) saturate(100%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  position: relative;
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  padding: 20px;
 }
 
 .mealCard {
+  width: 320px;
+  height: auto;
+  min-height: 280px;
+  font-family: "Roboto", sans-serif;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-family: "Roboto", sans-serif;
   padding: 16px;
-  background-color: #f9f9f9;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+.mealImage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .makeReservation {
@@ -42,6 +60,7 @@
 }
 
 .form {
+  width: 320px;
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
@@ -81,9 +100,18 @@
 
 .reviewButton {
   cursor: pointer;
+  display: block;
   margin: 0 auto;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 5px;
+  color: #333;
+  background-color: #f9f9f9;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
 }
 
 .hidden {
@@ -91,6 +119,7 @@
 }
 
 .reviewForm {
+  width: 320px;
   display: flex;
   flex-direction: column;
   border: 1px solid #ccc;
@@ -140,8 +169,31 @@
 }
 
 .backToMenuLink:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 .backToMenuLink:visited {
-    color: #333;
+  color: #333;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  text-align: center;
+  height: 100px;
+  width: 100%;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+@media (max-width: 600px) {
+  .backToMenuLink {
+    position: absolute;
+    top: 1020px;
+    left: 20px;
+  }
 }

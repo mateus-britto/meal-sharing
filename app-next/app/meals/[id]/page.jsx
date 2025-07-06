@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import { use } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import mealImages from "@/utils/mealImages";
 
 export default function MealDetail({ params }) {
   const { id } = typeof params.then === "function" ? use(params) : params;
@@ -13,19 +14,21 @@ export default function MealDetail({ params }) {
   const [showReview, setShowReview] = useState(false);
 
   // Fetching the meal by id
-  useEffect(() => {
-    async function fetchMeal() {
-      try {
-        const response = await fetch(`http://localhost:3000/api/meals/${id}`);
-        if (!response.ok) {
-          throw new Error("Meal not found");
-        }
-        const data = await response.json();
-        setMeal(data);
-      } catch (err) {
-        setError(err.message);
+  async function fetchMeal() {
+    try {
+      const response = await fetch(`http://localhost:3000/api/meals/${id}`);
+      if (!response.ok) {
+        throw new Error("Meal not found");
       }
+      const data = await response.json();
+      setMeal(data);
+    } catch (err) {
+      setError(err.message);
     }
+  }
+
+  // Fetching the meal by id
+  useEffect(() => {
     fetchMeal();
   }, [id]);
 
@@ -87,6 +90,7 @@ export default function MealDetail({ params }) {
     }
 
     submitReservation();
+    fetchMeal();
   }
 
   // Handle review submission
@@ -128,9 +132,11 @@ export default function MealDetail({ params }) {
         Back
       </Link>
       <div className={styles.mealCard}>
+        <img className={styles.mealImage} src={mealImages[meal.id]} alt="meal.title" />
         <h2 className={styles.mealTitle}>{meal.title}</h2>
         <p className={styles.description}>{meal.description}</p>
         <p className={styles.mealPrice}>${meal.price},00</p>
+        <p className={styles.mealPrice}>Spots left: {meal.spots_left}</p>
       </div>
       <button
         className={`${styles.reviewButton} ${!showReview ? styles.hidden : ""}`}
@@ -168,6 +174,9 @@ export default function MealDetail({ params }) {
       ) : (
         <p className={styles.noReservationsMessage}>No reservations available for this meal.</p>
       )}
+      <footer className={styles.footer}>
+        © {new Date().getFullYear()} Meal Sharing. Made with ❤️ for food lovers.
+      </footer>
     </div>
   );
 }

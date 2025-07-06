@@ -4,15 +4,21 @@ import React, { useState, useEffect } from "react";
 import Meal from "@/components/Meal/Meal";
 import styles from "./page.module.css";
 import Link from "next/link";
+import mealImages from "@/utils/mealImages";
 
 export default function MealList() {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState("title");
+  const [sortDir, setSortDir] = useState("asc");
 
   useEffect(() => {
     async function fetchMeals() {
       try {
-        const response = await fetch("http://localhost:3000/api/meals");
+        const response = await fetch(
+          `http://localhost:3000/api/meals?sortKey=${sortKey}&sortDir=${sortDir}`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -26,21 +32,72 @@ export default function MealList() {
       }
     }
     fetchMeals();
-  }, []);
+  }, [sortKey, sortDir]);
 
   if (loading) {
     return <div className={styles.loadingText}>Loading...</div>;
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
+  const filteredMeals = meals.filter((meal) =>
+    meal.title.toLowerCase().includes(search.toLocaleLowerCase())
+  );
+
   return (
     <div className={styles.pageWrapper}>
+      {/* search and sort functionalities */}
+      <div className={styles.searchAndSortWrapper}>
+        <form className={styles.searchForm} onSubmit={handleSubmit}>
+          <label htmlFor="searchInput" className={styles.label} style={{ display: "none" }}>
+            Search meals
+          </label>
+          <img src="/assets/search.svg" alt="Search" className={styles.searchIcon} />
+          <input
+            className={styles.searchInput}
+            id="searchInput"
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </form>
+
+        <div className={styles.sortControls}>
+          <label className={styles.label} htmlFor="sortKey">
+            Sort by:
+            <select id="sortKey" value={sortKey} onChange={(e) => setSortKey(e.target.value)}>
+              <option value="title">Meal name</option>
+              <option value="description">Meal description</option>
+              <option value="price">Meal price</option>
+            </select>
+          </label>
+
+          <label className={styles.label} htmlFor="sortDir">
+            Order by:
+            <select id="sortDir" value={sortDir} onChange={(e) => setSortDir(e.target.value)}>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      {/* search and sort functionalities */}
       <div className={styles.mealWrapper}>
         <h1 className={styles.mealsTitle}>Delicious Meals Await You</h1>
-        <p className={styles.seeMore}>Click on a meal to see more</p>
+        <p className={styles.seeMore}>Click on a meal to make reservations</p>
+        {filteredMeals.length === 0 && (
+          <p className={styles.resultsMessage}>No meals match your search</p>
+        )}
         <div className={styles.mealList}>
-          {meals.map((meal) => (
-            <Link className={styles.mealLink} key={meal.id} href={`http://localhost:3001/meals/${meal.id}`}>
-              <Meal meal={meal} />
+          {filteredMeals.map((meal) => (
+            <Link
+              className={styles.mealLink}
+              key={meal.id}
+              href={`http://localhost:3001/meals/${meal.id}`}
+            >
+              <Meal meal={{ ...meal, image: mealImages[meal.id] }} />
             </Link>
           ))}
         </div>

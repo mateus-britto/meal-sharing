@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Meal from "../Meal/Meal";
 import styles from "./MealList.module.css";
 import Link from "next/link";
+import mealImages from "@/utils/mealImages";
 
 export default function MealList() {
   const [meals, setMeals] = useState([]);
@@ -37,12 +38,12 @@ export default function MealList() {
         <h1 className={styles.mealsTitle}>Some of our Meals</h1>
         <div className={styles.mealList}>
           {meals.slice(0, 4).map((meal) => (
-            <Meal key={meal.id} meal={meal} />
+            <Meal key={meal.id} meal={{ ...meal, image: mealImages[meal.id] }} />
           ))}
         </div>
-      <Link className={styles.mealsLink} href="/meals">
-        <button className={styles.seeMoreBtn}>See more</button>
-      </Link>
+        <Link className={styles.mealsLink} href="/meals">
+          <button className={styles.seeMoreBtn}>See more</button>
+        </Link>
       </div>
       <footer className={styles.footer}>
         © {new Date().getFullYear()} Meal Sharing. Made with ❤️ for food lovers.

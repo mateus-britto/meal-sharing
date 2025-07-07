@@ -5,10 +5,10 @@ const mealImages = {
   4: "/assets/vegan.webp",
   5: "/assets/seafood.webp",
   6: "/assets/bbq.webp",
-  12: "/assets/tagine.webp",
-  13: "/assets/french.webp",
-  14: "/assets/indian.webp",
-  15: "/assets/nordic.webp",
+  7: "/assets/tagine.webp",
+  8: "/assets/french.webp",
+  9: "/assets/indian.webp",
+  10: "/assets/nordic.webp",
 };
 
 export default mealImages;

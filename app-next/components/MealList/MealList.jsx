@@ -12,7 +12,7 @@ export default function MealList() {
   useEffect(() => {
     async function fetchMeals() {
       try {
-        const response = await fetch("http://localhost:3000/api/meals");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/meals`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

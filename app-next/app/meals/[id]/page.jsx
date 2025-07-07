@@ -17,7 +17,7 @@ export default function MealDetail({ params }) {
   // Fetching the meal by id
   async function fetchMeal() {
     try {
-      const response = await fetch(`http://localhost:3000/api/meals/${id}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/meals/${id}`);
       if (!response.ok) {
         throw new Error("Meal not found");
       }
@@ -37,7 +37,7 @@ export default function MealDetail({ params }) {
   useEffect(() => {
     async function fetchReservation() {
       try {
-        const response = await fetch(`http://localhost:3000/api/reservations/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations/${id}`);
 
         if (response.status === 404) {
           setReservation(0); // No reservations for this meal, allow user to create one
@@ -68,7 +68,7 @@ export default function MealDetail({ params }) {
 
     async function submitReservation() {
       try {
-        const response = await fetch("http://localhost:3000/api/reservations", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -92,7 +92,7 @@ export default function MealDetail({ params }) {
     }
 
     submitReservation();
-    setShowReservation(!showReservation)
+    setShowReservation(!showReservation);
   }
 
   // Handle review submission
@@ -104,7 +104,7 @@ export default function MealDetail({ params }) {
 
     async function submitReview() {
       try {
-        const response = await fetch("http://localhost:3000/api/reviews", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -126,12 +126,12 @@ export default function MealDetail({ params }) {
       }
     }
     submitReview();
-    setShowReview(!showReview)
+    setShowReview(!showReview);
   }
 
   return (
     <div className={styles.mealWrapper}>
-      <Link className={styles.backToMenuLink} href="http://localhost:3001/meals">
+      <Link className={styles.backToMenuLink} href="/meals">
         Back
       </Link>
       <div className={styles.mealCard}>

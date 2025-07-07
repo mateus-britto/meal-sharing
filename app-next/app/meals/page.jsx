@@ -17,7 +17,7 @@ export default function MealList() {
     async function fetchMeals() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/meals?sortKey=${sortKey}&sortDir=${sortDir}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/meals?sortKey=${sortKey}&sortDir=${sortDir}`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -95,7 +95,7 @@ export default function MealList() {
             <Link
               className={styles.mealLink}
               key={meal.id}
-              href={`http://localhost:3001/meals/${meal.id}`}
+              href={`/meals/${meal.id}`}
             >
               <Meal meal={{ ...meal, image: mealImages[meal.id] }} />
             </Link>

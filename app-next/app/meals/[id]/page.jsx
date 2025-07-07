@@ -10,6 +10,7 @@ export default function MealDetail({ params }) {
   // Implemented "use" due to a warning saying that: In recent and upcoming versions of Next.js, params may be a Promise instead of a plain object.
   const [meal, setMeal] = useState(null);
   const [reservation, setReservation] = useState(0);
+  const [showReservation, setShowReservation] = useState(false);
   const [error, setError] = useState(null);
   const [showReview, setShowReview] = useState(false);
 
@@ -87,10 +88,11 @@ export default function MealDetail({ params }) {
       } catch (error) {
         alert(error.message || "An error occurred");
       }
+      fetchMeal();
     }
 
     submitReservation();
-    fetchMeal();
+    setShowReservation(!showReservation)
   }
 
   // Handle review submission
@@ -124,6 +126,7 @@ export default function MealDetail({ params }) {
       }
     }
     submitReview();
+    setShowReview(!showReview)
   }
 
   return (
@@ -137,17 +140,27 @@ export default function MealDetail({ params }) {
         <p className={styles.description}>{meal.description}</p>
         <p className={styles.mealPrice}>${meal.price},00</p>
         <p className={styles.mealPrice}>Spots left: {meal.spots_left}</p>
-      </div>
-      <button
-        className={`${styles.reviewButton} ${!showReview ? styles.hidden : ""}`}
-        onClick={() => setShowReview(!showReview)}
-      >
-        Leave a review
-      </button>
-      <div className={styles.reviewWrapper}>
+        {reservation >= meal.max_reservations ? (
+          <p className={styles.noReservationsMessage}>No reservations available.</p>
+        ) : (
+          ""
+        )}
+        <button className={styles.reviewButton} onClick={() => setShowReview(!showReview)}>
+          Leave a review ☆
+        </button>
+
+        {Number(meal.spots_left) > 0 && (
+          <button
+            className={styles.reservationButton}
+            onClick={() => setShowReservation(!showReservation)}
+          >
+            Make a reservation
+          </button>
+        )}
+
         {showReview && (
           <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
-            <label htmlFor="title">Title:</label>
+            <label htmlFor="title">Review title:</label>
             <input type="text" name="title" id="title" required />
 
             <label htmlFor="stars">Rating (1-5):</label>
@@ -155,25 +168,24 @@ export default function MealDetail({ params }) {
 
             <label htmlFor="comment">Comment:</label>
             <textarea name="comment" id="comment" rows="3" required />
-
             <button type="submit">Submit</button>
           </form>
         )}
+
+        {showReservation && reservation < meal.max_reservations && (
+          <form className={styles.form} onSubmit={handleReservationSubmit}>
+            <h2 className={styles.makeReservation}>Please make a reservation</h2>
+            <label htmlFor="name">Name:</label>
+            <input type="text" name="name" id="name" required />
+            <label htmlFor="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="exemple@exampe.com" required />
+            <label htmlFor="phone">Phone Number:</label>
+            <input type="tel" name="phone" id="phone" required />
+            <button>Submit</button>
+          </form>
+        )}
       </div>
-      {reservation < meal.max_reservations ? (
-        <form className={styles.form} onSubmit={handleReservationSubmit}>
-          <h2 className={styles.makeReservation}>Please make a reservation</h2>
-          <label htmlFor="name">Name:</label>
-          <input type="text" name="name" id="name" required />
-          <label htmlFor="email">Email:</label>
-          <input type="email" name="email" id="email" placeholder="exemple@exampe.com" required />
-          <label htmlFor="phone">Phone Number:</label>
-          <input type="tel" name="phone" id="phone" required />
-          <button>Submit</button>
-        </form>
-      ) : (
-        <p className={styles.noReservationsMessage}>No reservations available for this meal.</p>
-      )}
+
       <footer className={styles.footer}>
         © {new Date().getFullYear()} Meal Sharing. Made with ❤️ for food lovers.
       </footer>

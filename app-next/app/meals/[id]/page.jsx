@@ -34,99 +34,150 @@ export default function MealDetail({ params }) {
   }, [id]);
 
   // Fetching the reservation by id
-  useEffect(() => {
-    async function fetchReservation() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations/${id}`);
+  async function fetchReservation() {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations/${id}`);
 
-        if (response.status === 404) {
-          setReservation(0); // No reservations for this meal, allow user to create one
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error("Reservation not found");
-        }
-        const data = await response.json();
-        setReservation(data.number_of_guests);
-      } catch (err) {
-        setError(err.message);
+      if (response.status === 404) {
+        setReservation(0); // No reservations for this meal, allow user to create one
+        return;
       }
+
+      if (!response.ok) {
+        throw new Error("Reservation not found");
+      }
+      const data = await response.json();
+      setReservation(data.number_of_guests);
+    } catch (err) {
+      setError(err.message);
     }
+  }
+
+  useEffect(() => {
     fetchReservation();
   }, [id]);
 
   if (error) return <p>{error}</p>;
   if (!meal) return <p>Loading...</p>;
 
-  // Handle form submission
-  function handleReservationSubmit(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    async function submitReservation() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contact_name: data.name,
-            contact_email: data.email,
-            contact_phone_number: String(data.phone),
-            number_of_guests: 1,
-            meal_id: Number(id),
-            created_date: new Date().toISOString().slice(0, 10),
-          }),
-        });
-        if (!response.ok) {
-          throw new Error("Failed to submit reservation");
-        }
-        alert("Reservation submitted!");
-        event.target.reset(); // Clears the form if submission succeeds
-      } catch (error) {
-        alert(error.message || "An error occurred");
+  // Separate async function
+  async function submitReservation(data, event) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contact_name: data.name,
+          contact_email: data.email,
+          contact_phone_number: String(data.phone),
+          number_of_guests: 1,
+          meal_id: Number(id),
+          created_date: new Date().toISOString().slice(0, 10),
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to submit reservation");
       }
-      fetchMeal();
+      alert("Reservation submitted!");
+      event.target.reset();
+    } catch (error) {
+      alert(error.message || "An error occurred");
     }
-
-    submitReservation();
-    setShowReservation(!showReservation);
+    fetchMeal();
+    setShowReservation(false);
   }
 
-  // Handle review submission
-  function handleReviewSubmit(event) {
+  // Event handler
+  function handleReservationSubmit(event) {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
+    submitReservation(data, event);
+  }
 
-    async function submitReview() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: data.title,
-            description: data.comment,
-            meal_id: Number(id),
-            stars: Number(data.stars),
-            created_date: new Date().toISOString().slice(0, 10),
-          }),
-        });
+  // Separate async function for review submission
+  async function submitReview(data, event) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: data.title,
+          description: data.comment,
+          meal_id: Number(id),
+          stars: Number(data.stars),
+          created_date: new Date().toISOString().slice(0, 10),
+        }),
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to submit review");
-        }
-        alert("Thank you for your feedback!");
-        event.target.reset(); // Clears the form if submission succeeds
-      } catch (error) {
-        alert(error.message || "An error occurred");
+      if (!response.ok) {
+        throw new Error("Failed to submit review");
       }
+      alert("Thank you for your feedback!");
+      event.target.reset();
+    } catch (error) {
+      alert(error.message || "An error occurred");
     }
-    submitReview();
     setShowReview(!showReview);
+  }
+
+  // Event handler for review form
+  function handleReviewSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+    submitReview(data, event);
+  }
+
+  // split each of the ternary statements into their own branch of an if-else statement (as suggested by the mentor)
+  let reservationMessage = null;
+  if (reservation >= meal.max_reservations) {
+    reservationMessage = <p className={styles.noReservationsMessage}>No reservations available.</p>;
+  }
+
+  let reservationButton = null;
+  if (Number(meal.spots_left) > 0) {
+    reservationButton = (
+      <button
+        className={styles.reservationButton}
+        onClick={() => setShowReservation(!showReservation)}
+      >
+        Make a reservation
+      </button>
+    );
+  }
+
+  let reviewForm = null;
+  if (showReview) {
+    reviewForm = (
+      <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+        <label htmlFor="title">Review title:</label>
+        <input type="text" name="title" id="title" required />
+
+        <label htmlFor="stars">Rating (1-5):</label>
+        <input type="number" name="stars" id="stars" min="1" max="5" required />
+
+        <label htmlFor="comment">Comment:</label>
+        <textarea name="comment" id="comment" rows="3" required />
+        <button type="submit">Submit</button>
+      </form>
+    );
+  }
+
+  let reservationForm = null;
+  if (showReservation && reservation < meal.max_reservations) {
+    reservationForm = (
+      <form className={styles.form} onSubmit={handleReservationSubmit}>
+        <h2 className={styles.makeReservation}>Please make a reservation</h2>
+        <label htmlFor="name">Name:</label>
+        <input type="text" name="name" id="name" required />
+        <label htmlFor="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="exemple@exampe.com" required />
+        <label htmlFor="phone">Phone Number:</label>
+        <input type="tel" name="phone" id="phone" required />
+        <button>Submit</button>
+      </form>
+    );
   }
 
   return (
@@ -140,52 +191,14 @@ export default function MealDetail({ params }) {
         <p className={styles.description}>{meal.description}</p>
         <p className={styles.mealPrice}>${meal.price},00</p>
         <p className={styles.mealPrice}>Spots left: {meal.spots_left}</p>
-        {reservation >= meal.max_reservations ? (
-          <p className={styles.noReservationsMessage}>No reservations available.</p>
-        ) : (
-          ""
-        )}
+        {reservationMessage}
         <button className={styles.reviewButton} onClick={() => setShowReview(!showReview)}>
           Leave a review ☆
         </button>
-
-        {Number(meal.spots_left) > 0 && (
-          <button
-            className={styles.reservationButton}
-            onClick={() => setShowReservation(!showReservation)}
-          >
-            Make a reservation
-          </button>
-        )}
-
-        {showReview && (
-          <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
-            <label htmlFor="title">Review title:</label>
-            <input type="text" name="title" id="title" required />
-
-            <label htmlFor="stars">Rating (1-5):</label>
-            <input type="number" name="stars" id="stars" min="1" max="5" required />
-
-            <label htmlFor="comment">Comment:</label>
-            <textarea name="comment" id="comment" rows="3" required />
-            <button type="submit">Submit</button>
-          </form>
-        )}
-
-        {showReservation && reservation < meal.max_reservations && (
-          <form className={styles.form} onSubmit={handleReservationSubmit}>
-            <h2 className={styles.makeReservation}>Please make a reservation</h2>
-            <label htmlFor="name">Name:</label>
-            <input type="text" name="name" id="name" required />
-            <label htmlFor="email">Email:</label>
-            <input type="email" name="email" id="email" placeholder="exemple@exampe.com" required />
-            <label htmlFor="phone">Phone Number:</label>
-            <input type="tel" name="phone" id="phone" required />
-            <button>Submit</button>
-          </form>
-        )}
+        {reservationButton}
+        {reviewForm}
+        {reservationForm}
       </div>
-
       <footer className={styles.footer}>
         © {new Date().getFullYear()} Meal Sharing. Made with ❤️ for food lovers.
       </footer>

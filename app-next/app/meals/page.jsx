@@ -13,25 +13,26 @@ export default function MealList() {
   const [sortKey, setSortKey] = useState("title");
   const [sortDir, setSortDir] = useState("asc");
 
-  useEffect(() => {
-    async function fetchMeals() {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/meals?sortKey=${sortKey}&sortDir=${sortDir}`
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setMeals(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching meals", error);
-        setLoading(false);
+  // Move fetchMeals OUTSIDE of useEffect
+  async function fetchMeals(currentSortKey, currentSortDir) {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meals?sortKey=${currentSortKey}&sortDir=${currentSortDir}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      const data = await response.json();
+      setMeals(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching meals", error);
+      setLoading(false);
     }
-    fetchMeals();
+  }
+
+  useEffect(() => {
+    fetchMeals(sortKey, sortDir);
   }, [sortKey, sortDir]);
 
   if (loading) {
@@ -92,11 +93,7 @@ export default function MealList() {
         )}
         <div className={styles.mealList}>
           {filteredMeals.map((meal) => (
-            <Link
-              className={styles.mealLink}
-              key={meal.id}
-              href={`/meals/${meal.id}`}
-            >
+            <Link className={styles.mealLink} key={meal.id} href={`/meals/${meal.id}`}>
               <Meal meal={{ ...meal, image: mealImages[meal.id] }} />
             </Link>
           ))}

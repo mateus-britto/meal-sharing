@@ -58,9 +58,16 @@ export default function MealDetail({ params }) {
   }, [id]);
 
   if (error) return <p>{error}</p>;
-  if (!meal) return <p>Loading...</p>;
+  if (!meal)
+    return (
+      <div className={styles.loadingDots}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    );
 
-  // Separate async function
+  // Separate async function (mentor suggestion)
   async function submitReservation(data, event) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservations`, {
@@ -95,7 +102,7 @@ export default function MealDetail({ params }) {
     submitReservation(data, event);
   }
 
-  // Separate async function for review submission
+  // Separate async function for review submission (mentor suggestion)
   async function submitReview(data, event) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {

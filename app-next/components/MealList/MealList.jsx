@@ -29,7 +29,13 @@ export default function MealList() {
   }, []);
 
   if (loading) {
-    return <div className={styles.loadingText}>Loading...</div>;
+    return (
+      <div className={styles.loadingDots}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    );
   }
 
   return (
@@ -60,11 +66,11 @@ export default function MealList() {
       <div className={styles.mealWrapper}>
         <h2 className={styles.mealsTitle}>Some of our Meals</h2>
         <div className={styles.mealList}>
-          {meals.slice(0, 4).map((meal, idx) => (
+          {meals.slice(0, 4).map((meal) => (
             <Meal
               key={meal.id}
               meal={{ ...meal, image: mealImages[meal.id] }}
-              style={{ animationDelay: `${idx * 0.1}s` }}
+              disableHover={true}
             />
           ))}
         </div>

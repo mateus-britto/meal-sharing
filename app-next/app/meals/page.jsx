@@ -36,7 +36,13 @@ export default function MealList() {
   }, [sortKey, sortDir]);
 
   if (loading) {
-    return <div className={styles.loadingText}>Loading...</div>;
+    return (
+      <div className={styles.loadingDots}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    );
   }
 
   function handleSubmit(e) {

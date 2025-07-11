@@ -1,8 +1,8 @@
 import styles from "./Meal.module.css";
 
-export default function Meal({ meal }) {
+export default function Meal({ meal, disableHover = false }) {
   return (
-    <div className={styles.mealCard}>
+    <div className={disableHover ? styles.mealCardNoHover : styles.mealCard}>
       <img src={meal.image} alt={meal.title} className={styles.mealImage} loading="lazy" />
       <h2 className={styles.mealTitle}>{meal.title}</h2>
       <p className={styles.description}>{meal.description}</p>

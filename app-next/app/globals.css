@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -13,5 +17,6 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
 }

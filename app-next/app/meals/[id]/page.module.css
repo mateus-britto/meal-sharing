@@ -186,7 +186,14 @@
   background-color: #f9f9f9;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.5s;
   animation: fadeIn 0.8s ease;
+}
+
+.backToMenuLink:hover {
+  border-color: #ff9800;
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.2);
+  background-color: #ffe0b2;
 }
 
 .backToMenuLink:visited {
@@ -204,4 +211,35 @@
   width: 100%;
   color: #333;
   background-color: #f9f9f9;
+}
+
+.loadingDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.loadingDots span {
+  width: 12px;
+  height: 12px;
+  margin: 0 4px;
+  background: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loadingDots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loadingDots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  to {
+    opacity: 0.3;
+    transform: translateY(-16px);
+  }
 }

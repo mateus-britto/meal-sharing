@@ -1,14 +1,32 @@
 .mealCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  height: auto;
+  min-height: 320px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.5s;
+}
+
+.mealCard:hover {
+  border-color: #ff9800;
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.2);
+  background-color: #ffe0b2;
+}
+
+.mealImage {
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .mealTitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-bottom: 8px;
 }
 
@@ -19,8 +37,24 @@
 }
 
 .mealPrice {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #333;
   margin-top: 5px;
+}
+
+.mealCardNoHover {
+  /* Same as .mealCard but without hover effects */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  min-height: 320px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+  background-color: #f9f9f9;
+  /* No hover transition here */
 }

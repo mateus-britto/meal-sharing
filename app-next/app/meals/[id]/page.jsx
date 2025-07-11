@@ -186,7 +186,12 @@ export default function MealDetail({ params }) {
         Back
       </Link>
       <div className={styles.mealCard}>
-        <img className={styles.mealImage} src={mealImages[meal.id]} alt="meal.title" />
+        <img
+          className={styles.mealImage}
+          src={mealImages[meal.id]}
+          alt="meal.title"
+          loading="lazy"
+        />
         <h2 className={styles.mealTitle}>{meal.title}</h2>
         <p className={styles.description}>{meal.description}</p>
         <p className={styles.mealPrice}>${meal.price},00</p>

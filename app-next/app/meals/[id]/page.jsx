@@ -123,6 +123,7 @@ export default function MealDetail({ params }) {
       }
       alert("Thank you for your feedback!");
       event.target.reset();
+      setUserRating(null);
     } catch (error) {
       alert(error.message || "An error occurred");
     }

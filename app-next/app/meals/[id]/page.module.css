@@ -1,24 +1,54 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 .mealWrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 20px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  backdrop-filter: blur(1px) saturate(100%);
+  -webkit-backdrop-filter: blur(1px) saturate(100%);
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .mealCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 340px;
+  height: auto;
+  min-height: 280px;
+  font-family: "Roboto", sans-serif;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-family: "Roboto", sans-serif;
+  margin-top: 20px;
+  margin-bottom: 20px;
   padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mealImage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .makeReservation {
@@ -29,9 +59,9 @@
   font-size: 1.5rem;
 }
 
-.mealDescription {
+.description {
   font-size: 1rem;
-  margin-bottom: 8px;
+  font-weight: bold;
   color: #555;
 }
 
@@ -42,14 +72,10 @@
 }
 
 .form {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-family: "Roboto", sans-serif;
-  padding: 16px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease;
 }
 
 .form > label {
@@ -65,40 +91,57 @@
 
 .form > button {
   cursor: pointer;
-  margin: 0 auto;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 5px;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .noReservationsMessage {
-  background-color: #f9f9f9;
   font-family: "Roboto", sans-serif;
+  font-size: 1.3rem;
   font-weight: bold;
-  border: 1px solid #ccc;
+  color: orangered;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.reservationButton {
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 5px;
+  color: #fff;
+  background-color: #333;
+  border: none;
   border-radius: 8px;
-  padding: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
 }
 
 .reviewButton {
   cursor: pointer;
-  margin: 0 auto;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 5px;
-}
-
-.hidden {
-  margin-top: 20px;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .reviewForm {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-family: "Roboto", sans-serif;
-  padding: 16px;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease;
 }
 
 .reviewForm > label {
@@ -120,28 +163,110 @@
 
 .reviewForm > button {
   cursor: pointer;
-  margin: 0 auto;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
+  font-weight: bold;
   padding: 5px;
+  color: #fff;
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .backToMenuLink {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 10px;
+  left: 10px;
   text-decoration: none;
   padding: 5px;
   font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
   font-weight: bold;
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.5s, transform 0.2s;
 }
 
 .backToMenuLink:hover {
-    text-decoration: underline;
+  border-color: #bdbdbd;
+  box-shadow: 0 8px 24px rgba(189, 189, 189, 0.5);
+  background-color: #f9f9f9;
+  transform: translateY(-5px);
 }
+
 .backToMenuLink:visited {
-    color: #333;
+  color: #333;
+}
+
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ratingRow > label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.starRating {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.filledStar {
+  color: #daa520;
+  transition: color 0.2s;
+}
+
+.emptyStar {
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2rem;
+  text-align: center;
+  height: 100px;
+  width: 100%;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.loadingDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+}
+
+.loadingDots span {
+  width: 12px;
+  height: 12px;
+  margin: 0 4px;
+  background: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 0.6s infinite alternate;
+}
+
+.loadingDots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loadingDots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  to {
+    opacity: 0.3;
+    transform: translateY(-16px);
+  }
 }

@@ -1,14 +1,37 @@
 .mealCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  height: auto;
+  min-height: 320px;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   transition: 
+    border-color 0.2s, 
+    box-shadow 0.2s, 
+    background-color 0.5s,
+    transform 0.2s
+}
+
+.mealCard:hover {
+  border-color: #bdbdbd; 
+  box-shadow: 0 8px 24px rgba(189, 189, 189, 0.5);
+  background-color: #f9f9f9; 
+  transform: translateY(-5px)
+}
+
+.mealImage {
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .mealTitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-bottom: 8px;
 }
 
@@ -19,8 +42,22 @@
 }
 
 .mealPrice {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   color: #333;
   margin-top: 5px;
+}
+
+.mealCardNoHover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  min-height: 320px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+  background-color: #f9f9f9;
 }

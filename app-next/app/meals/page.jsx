@@ -13,7 +13,7 @@ export default function MealList() {
   const [sortKey, setSortKey] = useState("title");
   const [sortDir, setSortDir] = useState("asc");
 
-  // Move fetchMeals OUTSIDE of useEffect
+  // Function to fetch meals
   async function fetchMeals(currentSortKey, currentSortDir) {
     try {
       const response = await fetch(
@@ -31,6 +31,7 @@ export default function MealList() {
     }
   }
 
+  // Effect for fetching the meals whenever sortKey/sortDir change
   useEffect(() => {
     fetchMeals(sortKey, sortDir);
   }, [sortKey, sortDir]);
@@ -45,10 +46,12 @@ export default function MealList() {
     );
   }
 
-  function handleSubmit(e) {
+  // Function to handle search submission
+  function handleSearchSubmit(e) {
     e.preventDefault();
   }
 
+  // Filtering meals for search
   const filteredMeals = meals.filter((meal) =>
     meal.title.toLowerCase().includes(search.toLocaleLowerCase())
   );
@@ -57,7 +60,7 @@ export default function MealList() {
     <div className={styles.pageWrapper}>
       {/* search and sort functionalities */}
       <div className={styles.searchAndSortWrapper}>
-        <form className={styles.searchForm} onSubmit={handleSubmit}>
+        <form className={styles.searchForm} onSubmit={handleSearchSubmit}>
           <label htmlFor="searchInput" className={styles.label} style={{ display: "none" }}>
             Search meals
           </label>

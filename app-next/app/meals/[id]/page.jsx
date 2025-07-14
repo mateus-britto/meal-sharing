@@ -13,6 +13,7 @@ export default function MealDetail({ params }) {
   const [showReservation, setShowReservation] = useState(false);
   const [error, setError] = useState(null);
   const [showReview, setShowReview] = useState(false);
+  const [userRating, setUserRating] = useState(null);
 
   // Fetching the meal by id
   async function fetchMeal() {
@@ -102,7 +103,7 @@ export default function MealDetail({ params }) {
     submitReservation(data, event);
   }
 
-  // Separate async function for review submission (mentor suggestion)
+  // Async function for review submission
   async function submitReview(data, event) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
@@ -136,7 +137,26 @@ export default function MealDetail({ params }) {
     submitReview(data, event);
   }
 
-  // split each of the ternary statements into their own branch of an if-else statement (as suggested by the mentor)
+  // Star rating component
+  function StarRating({ rating, setRating }) {
+    return (
+      <div className={styles.starRating}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            className={star <= rating ? styles.filledStar : styles.emptyStar}
+            onClick={() => setRating(star)}
+            style={{ cursor: "pointer", fontSize: "2rem" }}
+            aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  // If else statements to conditionally render each part of the page
   let reservationMessage = null;
   if (reservation >= meal.max_reservations) {
     reservationMessage = <p className={styles.noReservationsMessage}>No reservations available.</p>;
@@ -158,11 +178,14 @@ export default function MealDetail({ params }) {
   if (showReview) {
     reviewForm = (
       <form className={styles.reviewForm} onSubmit={handleReviewSubmit}>
+        <div className={styles.ratingRow}>
+          <label htmlFor="stars">Rating:</label>
+          <StarRating rating={userRating} setRating={setUserRating} />
+        </div>
+        <input type="hidden" name="stars" value={userRating || ""} required />
+
         <label htmlFor="title">Review title:</label>
         <input type="text" name="title" id="title" required />
-
-        <label htmlFor="stars">Rating (1-5):</label>
-        <input type="number" name="stars" id="stars" min="1" max="5" required />
 
         <label htmlFor="comment">Comment:</label>
         <textarea name="comment" id="comment" rows="3" required />

@@ -30,7 +30,7 @@ reservationsRouter.post("/reservations", async (req, res) => {
     contact_email,
   } = req.body;
 
-  // Added data validation (had to use AI to figure it out)
+  
   if (
     !number_of_guests ||
     typeof number_of_guests !== "number" ||
@@ -50,6 +50,22 @@ reservationsRouter.post("/reservations", async (req, res) => {
   }
 
   try {
+    const meal = await knex("meal").where({ id: meal_id }).first();
+    if (!meal) {
+      return res.status(404).json({ message: "Meal not found" });
+    }
+
+    const reservations = await knex("reservation").where({ meal_id });
+
+    let guestsReserved = 0;
+    for (let i = 0; i < reservations.length; i++) {
+      guestsReserved += reservations[i].number_of_guests;
+    }
+
+    if (guestsReserved + number_of_guests > meal.max_reservations) {
+      return res.status(400).json({ message: "No spots left for this meal." });
+    }
+
     const newReservation = {
       number_of_guests,
       meal_id,

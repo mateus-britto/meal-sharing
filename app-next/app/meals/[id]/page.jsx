@@ -34,8 +34,6 @@ export default function MealDetail({ params }) {
     fetchMeal();
   }, [id]);
 
-  if (error) return <p className={styles.errorMessage}>{error}</p>;
-
   // Fetching the reservation by id
   async function fetchReservation() {
     try {
@@ -60,7 +58,8 @@ export default function MealDetail({ params }) {
     fetchReservation();
   }, [id]);
 
-  if (error) return <p>{error}</p>;
+  if (error) return <p className={styles.errorMessage}>{error}</p>;
+
   if (!meal)
     return (
       <div className={styles.loadingDots}>

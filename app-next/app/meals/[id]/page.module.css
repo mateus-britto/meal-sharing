@@ -227,6 +227,14 @@
   transition: color 0.2s;
 }
 
+.errorMessage {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0;
+  text-align: center;
+}
+
 .footer {
   display: flex;
   align-items: center;

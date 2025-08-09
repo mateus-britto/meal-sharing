@@ -209,7 +209,7 @@ export default function MealDetail({ params }) {
         <label htmlFor="name">Name:</label>
         <input type="text" name="name" id="name" required />
         <label htmlFor="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="example@exampe.com" required />
+        <input type="email" name="email" id="email" placeholder="example@example.com" required />
         <label htmlFor="phone">Phone Number:</label>
         <input type="tel" name="phone" id="phone" required />
         <button>Submit</button>

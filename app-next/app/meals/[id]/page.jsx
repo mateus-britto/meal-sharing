@@ -11,9 +11,10 @@ export default function MealDetail({ params }) {
   const [meal, setMeal] = useState(null);
   const [reservation, setReservation] = useState(0);
   const [showReservation, setShowReservation] = useState(false);
-  const [error, setError] = useState(null);
   const [showReview, setShowReview] = useState(false);
   const [userRating, setUserRating] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetching the meal by id
   async function fetchMeal() {
@@ -26,6 +27,8 @@ export default function MealDetail({ params }) {
       setMeal(data);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -60,7 +63,7 @@ export default function MealDetail({ params }) {
 
   if (error) return <p className={styles.errorMessage}>{error}</p>;
 
-  if (!meal)
+  if (loading)
     return (
       <div className={styles.loadingDots}>
         <span></span>
@@ -68,6 +71,8 @@ export default function MealDetail({ params }) {
         <span></span>
       </div>
     );
+
+  if (!meal && !loading) return <p className={styles.errorMessage}>Meal not found.</p>;
 
   // Separate async function (mentor suggestion)
   async function submitReservation(data, event) {
@@ -204,7 +209,7 @@ export default function MealDetail({ params }) {
         <label htmlFor="name">Name:</label>
         <input type="text" name="name" id="name" required />
         <label htmlFor="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="exemple@exampe.com" required />
+        <input type="email" name="email" id="email" placeholder="example@exampe.com" required />
         <label htmlFor="phone">Phone Number:</label>
         <input type="tel" name="phone" id="phone" required />
         <button>Submit</button>
@@ -221,7 +226,7 @@ export default function MealDetail({ params }) {
         <img
           className={styles.mealImage}
           src={mealImages[meal.id]}
-          alt="meal.title"
+          alt={meal.title}
           loading="lazy"
         />
         <h2 className={styles.mealTitle}>{meal.title}</h2>

@@ -10,7 +10,12 @@ mealsRouter.get("/meals", async (req, res) => {
 
   try {
     const query = knex("meal")
-      .select("meal.*")
+      .select(
+        "meal.*",
+        knex.raw(
+          "meal.max_reservations - IFNULL(SUM(reservation.number_of_guests), 0) AS spots_left"
+        )
+      )
       .leftJoin("reservation", "meal.id", "reservation.meal_id")
       .groupBy("meal.id");
 
@@ -71,7 +76,7 @@ mealsRouter.get("/meals", async (req, res) => {
     }
 
     // Allowed sorting keys
-    const allowedSortKeys = ["when", "max_reservations", "price"];
+    const allowedSortKeys = ["when", "max_reservations", "price", "title", "description"];
     const allowedSortDirs = ["asc", "desc"];
 
     if (sortDir && !sortKey) {
@@ -153,7 +158,17 @@ mealsRouter.get("/meals/:id", async (req, res) => {
   }
 
   try {
-    const meal = await knex("meal").where({ id }).first();
+    const meal = await knex("meal")
+      .select(
+        "meal.*",
+        knex.raw(
+          "meal.max_reservations - IFNULL(SUM(reservation.number_of_guests), 0) AS spots_left"
+        )
+      )
+      .leftJoin("reservation", "meal.id", "reservation.meal_id")
+      .where("meal.id", id)
+      .groupBy("meal.id")
+      .first();
 
     if (!meal) {
       return res.status(404).json({ message: "No meal found" });
